@@ -38,7 +38,7 @@ model users {
   id               Int                @id @default(autoincrement())
   role             users_role?        @default(USER)
   username         String             @unique(map: "username") @db.VarChar(30)
-  password         String             @db.Text
+  password         String             @db.VarChar(60)
   createdAt        DateTime?          @default(now()) @db.Timestamp(0)
   updatedAt        DateTime?          @default(now()) @db.Timestamp(0)
   link_assignments link_assignments[]
