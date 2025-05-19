@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model link_assignments {
+  userId     Int
+  linkId     Int
+  assignedAt DateTime? @default(now()) @db.Timestamp(0)
+  revokedAt  DateTime? @db.Timestamp(0)
+  users      users     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "link_assignments_ibfk_1")
+  links      links     @relation(fields: [linkId], references: [id], onDelete: Cascade, map: "link_assignments_ibfk_2")
+
+  @@id([userId, linkId])
+  @@index([linkId], map: "linkId")
+}
+
+model links {
+  id               Int                @id @default(autoincrement())
+  creatorId        Int
+  name             String             @unique(map: "name") @db.VarChar(30)
+  description      String?            @db.Text
+  url              String             @db.Text
+  createdAt        DateTime?          @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime?          @default(now()) @db.Timestamp(0)
+  link_assignments link_assignments[]
+  users            users              @relation(fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "links_ibfk_1")
+
+  @@index([creatorId], map: "creatorId")
+}
+
+model users {
+  id               Int                @id @default(autoincrement())
+  role             users_role?        @default(USER)
+  username         String             @unique(map: "username") @db.VarChar(30)
+  password         String             @db.Text
+  createdAt        DateTime?          @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime?          @default(now()) @db.Timestamp(0)
+  link_assignments link_assignments[]
+  links            links[]
+}
+
+enum users_role {
+  USER
+  ADMIN
+}
