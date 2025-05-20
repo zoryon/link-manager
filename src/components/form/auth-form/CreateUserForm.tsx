@@ -37,6 +37,7 @@ const CreateUserForm = () => {
         defaultValues: {
             username: "",
             password: "",
+            passwordConfirmation: "",
             role: users_role.USER
         },
     });
@@ -57,7 +58,9 @@ const CreateUserForm = () => {
         });
         setIsPending(false);
 
-        router.push("/users");
+        if (res.success) {
+            router.push("/users");
+        }
     }
 
     return (
@@ -82,6 +85,13 @@ const CreateUserForm = () => {
                 <PasswordInput 
                     control={form.control} 
                     fieldLabel="Password" 
+                />
+
+                {/* Password confirmation */}
+                <PasswordInput 
+                    control={form.control} 
+                    fieldLabel="Password" 
+                    isConfirmation
                 />
 
                 {/* Role */}

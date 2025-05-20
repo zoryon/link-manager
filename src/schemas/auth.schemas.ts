@@ -9,5 +9,9 @@ export const userSchema = z.object({
 export const createUserSchema = userSchema.merge(
   z.object({
     role: z.enum([users_role.ADMIN, users_role.USER]),
+    passwordConfirmation: z.string(),
   })
-);
+).refine((data) => data.password === data.passwordConfirmation, {
+  message: "Password confirmation does not match password",
+  path: ["passwordConfirmation"],
+});

@@ -17,10 +17,8 @@ export default function CoreLayout({
             <header>
                 <Navbar />
             </header>
-            <main className="flex-1 p-6 md:p-8">
-                <div className="max-w-7xl mx-auto">
-                    {children}
-                </div>
+            <main className="pt-15">
+                {children}
             </main>
         </Providers>
     );

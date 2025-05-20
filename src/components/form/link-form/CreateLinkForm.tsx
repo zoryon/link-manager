@@ -37,8 +37,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const CreateLinkForm = () => {
+    const [isPending, setIsPending] = useState<boolean>(false);
     const [usersList, setUsersList] = useState<Array<users>>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [result, setResult] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -51,6 +53,7 @@ const CreateLinkForm = () => {
                 setUsersList(res.data);
             } else {
                 console.error(res.message)
+                setResult(res.message);
             }
         };
         fetchUsers();
@@ -67,15 +70,22 @@ const CreateLinkForm = () => {
     });
 
     async function onSubmit(data: z.infer<typeof linkSchema>) {
+        setResult("");
+        setIsPending(true);
+
         const res: ApiResponse = await fetch(api.links.post.path, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then(res => res.json())
 
-        if (!res.success) console.error(res.message);
-
-        router.push("/");
+        if (res.success) {
+            router.push("/");
+        } else {
+            console.error(res.message);
+            setResult(res.message);
+        }
+        setIsPending(false);
     };
 
     return (
@@ -92,7 +102,7 @@ const CreateLinkForm = () => {
                                 <Input
                                     {...field}
                                     placeholder="My Awesome Link"
-                                    className="focus-visible:ring-2 focus-visible:ring-primary/50"
+                                    className="focus-visible:ring-2 focus-visible:ring-primary/50 border-accent/50"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -110,7 +120,7 @@ const CreateLinkForm = () => {
                                     {...field}
                                     placeholder="https://example.com"
                                     type="url"
-                                    className="focus-visible:ring-2 focus-visible:ring-primary/50"
+                                    className="focus-visible:ring-2 focus-visible:ring-primary/50 border-accent/50"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -127,7 +137,7 @@ const CreateLinkForm = () => {
                                 <Textarea
                                     {...field}
                                     placeholder="Describe your link..."
-                                    className="resize-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                                    className="resize-none focus-visible:ring-2 focus-visible:ring-primary/50 border-accent/50"
                                     rows={4}
                                     maxLength={500}
                                 />
@@ -148,7 +158,7 @@ const CreateLinkForm = () => {
                                 <Popover open={open} onOpenChange={setOpen}>
                                     <PopoverTrigger asChild>
                                         <div className="relative">
-                                            <div className="flex flex-wrap gap-2 rounded-md border p-2 min-h-[40px] cursor-pointer hover:border-primary/50 transition-colors">
+                                            <div className="flex flex-wrap gap-2 rounded-md border p-2 min-h-[40px] cursor-pointer border-accent/50 transition-colors">
                                                 {field.value.length === 0 && (
                                                     <span className="text-muted-foreground ml-2">
                                                         Select users...
@@ -160,7 +170,7 @@ const CreateLinkForm = () => {
                                                         <Badge
                                                             key={userId}
                                                             variant="secondary"
-                                                            className="flex items-center gap-1 pr-1"
+                                                            className="flex items-center gap-1 pr-1 "
                                                         >
                                                             {user?.username}
                                                             <button
@@ -181,7 +191,7 @@ const CreateLinkForm = () => {
                                             </div>
                                         </div>
                                     </PopoverTrigger>
-                                    <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
+                                    <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)] bg-ring/40">
                                         <Command>
                                             <CommandInput placeholder="Search users..." />
                                             <CommandList>
@@ -203,9 +213,9 @@ const CreateLinkForm = () => {
                                                                 <i className={cn(
                                                                     "fa-solid fa-check w-4 h-4",
                                                                     field.value.includes(user.id)
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                )}/>
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )} />
                                                             </div>
                                                             {user.username}
                                                         </CommandItem>
@@ -221,10 +231,16 @@ const CreateLinkForm = () => {
                     )}
                 />
 
+                {/* Result message */}
+                {!isPending && result && (
+                    <p className="text-sm text-red-600">{result}</p>
+                )}
+
                 <div className="flex justify-end gap-4">
                     <Button
                         type="submit"
                         className="px-8 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary"
+                        disabled={isPending}
                     >
                         Create Link
                     </Button>

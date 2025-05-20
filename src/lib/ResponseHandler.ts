@@ -62,6 +62,16 @@ export class ResponseHandler {
         message: string;
         statusCode: number;
     } {
+        if (error && typeof error === "object" && "code" in error) {
+            // Check for Prisma error code
+            if (error.code === 'P2002') {
+                return {
+                    message: "An entry with this value already exists",
+                    statusCode: 409,
+                };
+            }
+        }
+
         // Handle custom errors first
         if (error instanceof AuthenticationError) {
             return {
@@ -84,12 +94,6 @@ export class ResponseHandler {
 
         // Handle Prisma errors
         if (error instanceof PrismaClientKnownRequestError) {
-            if (error.code === 'P2002') {
-                return {
-                    message: "Username already exists",
-                    statusCode: 409,
-                };
-            }
             return {
                 message: this.sanitizePrismaError(error),
                 statusCode: 500,

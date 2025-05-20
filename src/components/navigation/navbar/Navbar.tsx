@@ -7,17 +7,20 @@ import { NavbarItem } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion"
+import { useAuth } from "@/hooks/use-auth";
 
 const Navbar = () => {
+    const { currentUser } = useAuth();
+
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const primaryColor = "from-blue-600 to-purple-600";
+    const primaryGradient = "from-[oklch(0.67_0.20_195)] to-[oklch(0.62_0.22_270)]";
 
     return (
         <>
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center h-16 px-6 border-b backdrop-blur-sm">
+            <nav className="hidden md:flex w-full items-center h-16 px-6 border-b border-border backdrop-blur-sm bg-background/90 fixed top-0 left-0 z-50">
                 <Link href="/" className="mr-8">
-                    <h1 className={`text-xl font-bold bg-gradient-to-r ${primaryColor} bg-clip-text text-transparent`}>
+                    <h1 className={`text-xl font-bold bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent`}>
                         LinkHub
                     </h1>
                 </Link>
@@ -29,15 +32,15 @@ const Navbar = () => {
                             asChild
                             variant="ghost"
                             className={cn(
-                                "h-10 rounded-lg px-4 font-medium text-gray-600",
-                                "hover:bg-gray-50 hover:text-gray-900",
-                                "data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-50 data-[active=true]:to-purple-50",
-                                "data-[active=true]:text-gray-900"
+                                "h-10 rounded-lg px-4 font-medium !text-trivial",
+                                "hover:!bg-bg-muted hover:text-foreground",
+                                "data-[active=true]:!bg-gradient-to-r data-[active=true]:!from-chart-3/15 data-[active=true]:!to-chart-2/15",
+                                "data-[active=true]:!text-trivial"
                             )}
                         >
                             <Link href={item.href}>
                                 <i className={cn(
-                                    "w-4 h-4 mr-2",
+                                    "w-4 h-4 mr-2 text-chart-2/15",
                                     item.icon
                                 )} />
                                 {item.name}
@@ -47,19 +50,19 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center gap-4 ml-auto">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white">
-                        JD
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-chart-2/15 to-[oklch(0.62_0.22_270)] flex items-center justify-center text-background font-medium">
+                        {currentUser?.username?.charAt(0).toUpperCase() || "JD"}
                     </div>
                 </div>
             </nav>
 
             {/* Mobile Nav */}
-            <nav className="md:hidden flex items-center h-16 px-4 border-b backdrop-blur-sm sticky top-0 z-50">
+            <nav className="md:hidden w-full flex items-center h-16 px-4 border-b border-border backdrop-blur-sm fixed top-0 z-50 bg-background/90">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(!isOpen)}
-                    className="mr-2 flex justify-center items-center"
+                    className="mr-2 flex justify-center items-center text-chart-2/15 hover:!bg-bg-muted hover:text-chart-3"
                 >
                     <i className={cn(
                         "h-5 w-5 mt-1.5",
@@ -68,12 +71,12 @@ const Navbar = () => {
                 </Button>
 
                 <Link href="/" className="flex-1">
-                    <h1 className={`text-xl font-bold bg-gradient-to-r ${primaryColor} bg-clip-text text-transparent`}>
+                    <h1 className={`text-xl font-bold bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent`}>
                         LinkHub
                     </h1>
                 </Link>
 
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-chart-2/15 to-[oklch(0.62_0.22_270)] flex items-center justify-center text-background font-medium">
                     JD
                 </div>
 
@@ -82,7 +85,7 @@ const Navbar = () => {
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="absolute top-16 left-0 right-0 bg-background border-b shadow-lg"
+                        className="absolute top-16 left-0 right-0 bg-[oklch(0.19_0.03_245)] border-b border-muted shadow-lg shadow-black/30"
                     >
                         <div className="p-4 space-y-2">
                             {NAVBAR_ITEMS.map((item: NavbarItem) => (
@@ -90,12 +93,12 @@ const Navbar = () => {
                                     key={item.name}
                                     asChild
                                     variant="ghost"
-                                    className="w-full justify-start h-12 rounded-lg px-4 text-gray-600"
+                                    className="w-full justify-start h-12 rounded-lg px-4 !text-trivial hover:!bg-bg-muted hover:text-foreground"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     <Link href={item.href}>
                                         <i className={cn(
-                                            "w-5 h-5 mr-3",
+                                            "w-5 h-5 mr-3 text-chart-2/15",
                                             item.icon
                                         )} />
                                         {item.name}

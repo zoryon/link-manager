@@ -1,14 +1,14 @@
 "use client";
 
-import HomePage from "@/components/HomePage";
+import Home from "@/components/Home";
 import { Suspense } from "react";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <HomePage />
+      <Home />
     </Suspense>
   );
 }
 
-export default Home;
+export default HomePage;
