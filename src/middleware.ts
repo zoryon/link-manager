@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifySession } from "./lib/session";
 import { api } from "./lib/endpoint-builder";
+import { Route } from "./types";
 
 /**
  * Middleware function to handle authentication and authorization
@@ -19,8 +20,8 @@ export async function middleware(req: NextRequest) {
     */
    if (pathname.startsWith("/api")) {
         // API routes accessible only to unauthenticated users
-        const unauthenticatedOnlyApi = [
-           api.sessions.post.path,
+        const unauthenticatedOnlyApi: Array<Route> = [
+           { path: api.sessions.post.path, method: api.sessions.post.method }
         ];
 
         // API routes always accessible to everyone
@@ -28,7 +29,7 @@ export async function middleware(req: NextRequest) {
         
         // Check if the current API route is for unauthenticated users only
         const isUnauthenticatedApi = unauthenticatedOnlyApi.some(route => 
-            pathname.startsWith(route)
+            pathname.startsWith(route.path) && req.method === route.method
         );
         
         // Prevent authenticated users from accessing unauthenticated-only API routes

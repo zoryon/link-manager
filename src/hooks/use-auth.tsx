@@ -16,20 +16,25 @@ export const AuthContext = createContext<AuthContextProps>(null!);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [currentUser, setCurrentUser] = useState<PublicUser | null>(null);
-    const [isPending, setIsPending] = useState<boolean>(false);
+    const [isPending, setIsPending] = useState<boolean>(true);
 
     async function fetchCurrentUser() {
-        setIsPending(true);
-        const res: ApiResponse = await fetch(api.me.get.path, {
-            method: "GET"
-        }).then(res => res.json());
-        
-        if (res.success) {
-            setCurrentUser(res.data);
-        } else {
-            console.error(res.message);
+        try {
+            setIsPending(true);
+            const res: ApiResponse = await fetch(api.me.get.path, {
+                method: "GET"
+            }).then(res => res.json());
+            
+            if (res.success) {
+                setCurrentUser(res.data);
+            } else {
+                console.error(res.message);
+            }
+            setIsPending(false);
+        } catch (error: any) {
+            console.error(error.message);
+            setIsPending(false);
         }
-        setIsPending(false);
     }
 
     useEffect(() => {

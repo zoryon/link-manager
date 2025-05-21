@@ -1,9 +1,18 @@
-import { AuthProvider } from "@/hooks/use-auth";
+"use client";
 
-const Providers = ({ children }: { children: React.ReactNode}) => {
+import { AuthProvider } from "@/hooks/use-auth";
+import { HomeProvider } from "@/hooks/use-home";
+import { useSearchParams } from "next/navigation";
+
+const Providers = ({ children }: { children: React.ReactNode }) => {
+    const searchParams = useSearchParams();
+    const paramsObject = Object.fromEntries(searchParams.entries());
+
     return (
         <AuthProvider>
-            {children}
+            <HomeProvider searchParams={paramsObject}>
+                {children}
+            </HomeProvider>
         </AuthProvider>
     );
 }

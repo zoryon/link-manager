@@ -11,6 +11,7 @@ export const API_CONFIG = {
     },
     sessions: {
         post: { path: "/sessions", method: "POST" as const },
+        delete: { path: "/sessions", method: "DELETE" as const },
     },
     links : {
         get: { path: "/links", method: "GET" as const },

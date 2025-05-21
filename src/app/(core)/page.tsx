@@ -1,6 +1,6 @@
 "use client";
 
-import Home from "@/components/Home";
+import Home from "@/components/home-components/Home";
 import { Suspense } from "react";
 
 const HomePage = () => {

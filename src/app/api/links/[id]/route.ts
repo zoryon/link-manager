@@ -54,3 +54,8 @@ export async function GET(request: NextRequest, { params } : { params: Promise<{
         return ResponseHandler.handleError(error);
     }
 }
+
+// Delete one or more links
+async function DELETE(request: NextRequest, { params } : { params: Promise<{ id: number }>}) {
+
+}

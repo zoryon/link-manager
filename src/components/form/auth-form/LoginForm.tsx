@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { z } from "zod";
 import { userSchema } from "@/schemas";
@@ -80,7 +80,6 @@ const LoginForm = () => {
                 <PasswordInput 
                     control={form.control} 
                     fieldLabel="Password" 
-                    isLogin 
                 />
 
                 {/* Result message */}

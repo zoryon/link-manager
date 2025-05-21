@@ -8,9 +8,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion"
 import { useAuth } from "@/hooks/use-auth";
+import { Skeleton } from "@/components/ui/skeleton";
+import ProfileBtn from "@/components/buttons/ProfileBtn";
 
 const Navbar = () => {
-    const { currentUser } = useAuth();
+    const { isPending, isAdmin } = useAuth();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const primaryGradient = "from-[oklch(0.67_0.20_195)] to-[oklch(0.62_0.22_270)]";
@@ -26,34 +28,45 @@ const Navbar = () => {
                 </Link>
 
                 <div className="flex-1 flex items-center gap-2">
-                    {NAVBAR_ITEMS.map((item: NavbarItem) => (
-                        <Button
-                            key={item.name}
-                            asChild
-                            variant="ghost"
-                            className={cn(
-                                "h-10 rounded-lg px-4 font-medium !text-trivial",
-                                "hover:!bg-bg-muted hover:text-foreground",
-                                "data-[active=true]:!bg-gradient-to-r data-[active=true]:!from-chart-3/15 data-[active=true]:!to-chart-2/15",
-                                "data-[active=true]:!text-trivial"
-                            )}
-                        >
-                            <Link href={item.href}>
-                                <i className={cn(
-                                    "w-4 h-4 mr-2 text-chart-2/15",
-                                    item.icon
-                                )} />
-                                {item.name}
-                            </Link>
-                        </Button>
-                    ))}
+                    {
+                        isPending ? (
+                            <div className="flex items-center gap-3 pl-5">
+                                <Skeleton className="h-6 w-[100px]" />
+                                <Skeleton className="h-6 w-[100px]" />
+                                <Skeleton className="h-6 w-[100px]" />
+                            </div>
+                        ) : (
+                            NAVBAR_ITEMS.map((item: NavbarItem) => {
+                                if (!isAdmin() && item.isAdminOnly) {
+                                    return null;
+                                }
+                                return (
+                                    <Button
+                                        key={item.name}
+                                        asChild
+                                        variant="ghost"
+                                        className={cn(
+                                            "h-10 rounded-lg px-4 font-medium !text-trivial",
+                                            "hover:!bg-bg-muted hover:text-foreground",
+                                            "data-[active=true]:!bg-gradient-to-r data-[active=true]:!from-chart-3/15 data-[active=true]:!to-chart-2/15",
+                                            "data-[active=true]:!text-trivial"
+                                        )}
+                                    >
+                                        <Link href={item.href}>
+                                            <i className={cn(
+                                                "w-4 h-4 mr-2 text-chart-2/15",
+                                                item.icon
+                                            )} />
+                                            {item.name}
+                                        </Link>
+                                    </Button>
+                                )
+                            })
+                        )
+                    }
                 </div>
 
-                <div className="flex items-center gap-4 ml-auto">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-chart-2/15 to-[oklch(0.62_0.22_270)] flex items-center justify-center text-background font-medium">
-                        {currentUser?.username?.charAt(0).toUpperCase() || "JD"}
-                    </div>
-                </div>
+                <ProfileBtn />
             </nav>
 
             {/* Mobile Nav */}
@@ -76,9 +89,7 @@ const Navbar = () => {
                     </h1>
                 </Link>
 
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-chart-2/15 to-[oklch(0.62_0.22_270)] flex items-center justify-center text-background font-medium">
-                    JD
-                </div>
+                <ProfileBtn />
 
                 {/* Mobile Menu */}
                 {isOpen && (

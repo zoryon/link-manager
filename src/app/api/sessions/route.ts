@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
 // Logout
 export async function DELETE() {
-    if (!await verifySession()) ResponseHandler.unauthorized("You are not logged-in");
+    if (!(await verifySession())) ResponseHandler.unauthorized("You are not logged-in");
 
     (await cookies()).delete("session_token");
 
