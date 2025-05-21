@@ -2,9 +2,9 @@
 
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { links as linksType } from "@/generated/prisma";
-import { ApiResponse, LinkWithTld, FilterParams } from "@/types";
+import { ApiResponse, LinkWithTld } from "@/types";
 import { api } from "@/lib/endpoint-builder";
-import { getTldFromUrl, updateUrlWithFilters } from "@/lib/utils";
+import { getTldFromUrl } from "@/lib/utils";
 
 type HomeContextType = {
     isPending: boolean;
@@ -22,10 +22,7 @@ type HomeContextType = {
 
 const HomeContext = createContext<HomeContextType | undefined>(undefined);
 
-export function HomeProvider({ children, searchParams }: {
-    children: React.ReactNode,
-    searchParams?: Partial<FilterParams>
-}) {
+export function HomeProvider({ children }: { children: React.ReactNode }) {
     const [isPending, setIsPending] = useState(true);
     const [links, setLinks] = useState<linksType[]>([]);
     const [nameFilter, setNameFilter] = useState("");
@@ -67,14 +64,7 @@ export function HomeProvider({ children, searchParams }: {
 
             return matchesName && matchesDomain && matchesDate;
         }
-    ), [linksWithTld, nameFilter, domainFilter, dateFilter]);
-
-    // Synchronize states with searchParams after mount
-    useEffect(() => {
-        setNameFilter(searchParams?.name || "");
-        setDateFilter(searchParams?.date || "all");
-        setDomainFilter(searchParams?.domain || "all");
-    }, [searchParams]);
+        ), [linksWithTld, nameFilter, domainFilter, dateFilter]);
 
     // Fetch links
     useEffect(() => {
@@ -90,28 +80,6 @@ export function HomeProvider({ children, searchParams }: {
             setIsPending(false);
         }
         fetchLinks();
-    }, []);
-
-    // Update filters
-    useEffect(() => {
-        updateUrlWithFilters({
-            name: nameFilter,
-            date: dateFilter,
-            domain: domainFilter
-        })
-    }, [nameFilter, dateFilter, domainFilter]);
-
-    // Manage browser history
-    useEffect(() => {
-        const handlePopState = () => {
-            const params = new URLSearchParams(window.location.search);
-            setNameFilter(params.get('name') || "");
-            setDateFilter(params.get('date') || "all");
-            setDomainFilter(params.get('domain') || "all");
-        };
-
-        window.addEventListener("popstate", handlePopState);
-        return () => window.removeEventListener("popstate", handlePopState);
     }, []);
 
     function clearAllFilters() {

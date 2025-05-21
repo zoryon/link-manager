@@ -45,43 +45,6 @@ export function getQueryParams() {
   };
 };
 
-export function updateUrlWithFilters(filters: FilterParams) {
-  // Funziona solo lato client
-  if (typeof window === 'undefined') return
-
-  const params = new URLSearchParams(window.location.search)
-
-  // Gestione parametro 'name'
-  if (filters.name?.trim()) {
-    params.set('name', filters.name)
-  } else {
-    params.delete('name')
-  }
-
-  // Gestione parametro 'date'
-  if (filters.date && filters.date !== 'all') {
-    params.set('date', filters.date)
-  } else {
-    params.delete('date')
-  }
-
-  // Gestione parametro 'domain'
-  if (filters.domain && filters.domain !== 'all') {
-    params.set('domain', filters.domain)
-  } else {
-    params.delete('domain')
-  }
-
-  // Costruzione URL finale
-  const queryString = params.toString()
-  const newUrl = queryString 
-    ? `${window.location.pathname}?${queryString}`
-    : window.location.pathname
-
-  // Aggiornamento URL senza ricaricamento
-  window.history.pushState({}, '', newUrl)
-}
-
 export function formatTimeDistance(dateString: any) {
   const date = new Date(dateString);
   const now = new Date();
