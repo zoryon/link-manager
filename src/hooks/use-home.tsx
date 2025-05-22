@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, Dispatch, SetStateAction } from "react";
 import { links as linksType } from "@/generated/prisma";
 import { ApiResponse, LinkWithTld } from "@/types";
 import { api } from "@/lib/endpoint-builder";
@@ -9,6 +9,7 @@ import { getTldFromUrl } from "@/lib/utils";
 type HomeContextType = {
     isPending: boolean;
     links: linksType[];
+    setLinks: Dispatch<SetStateAction<linksType[]>>;
     nameFilter: string;
     setNameFilter: (value: string) => void;
     dateFilter: string;
@@ -91,6 +92,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
     const value = {
         isPending,
         links,
+        setLinks,
         nameFilter,
         setNameFilter,
         dateFilter,

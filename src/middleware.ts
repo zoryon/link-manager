@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
      * API Routes Access Handling
      * ---------------------------
     */
-   if (pathname.startsWith("/api")) {
+    if (pathname.startsWith("/api")) {
         // API routes accessible only to unauthenticated users
         const unauthenticatedOnlyApi: Array<Route> = [
            { path: api.sessions.post.path, method: api.sessions.post.method }
