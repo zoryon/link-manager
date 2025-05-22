@@ -14,13 +14,18 @@ export const API_CONFIG = {
         post: { path: "/sessions", method: "POST" as const },
         delete: { path: "/sessions", method: "DELETE" as const },
     },
-    links : {
+    links: {
         get: { path: "/links", method: "GET" as const },
         post: { path: "/links", method: "POST" as const },
         delete: { path: "links", method: "DELETE" as const },
         byId: (id: number) => ({
             get: { path: `/links/${id}`, method: "GET" as const },
             delete: { path: `/links/${id}`, method: "DELETE" as const },
+        })
+    },
+    assignments: {
+        byIds: ({ linkId, userId }: { linkId: number, userId: number }) => ({
+            delete: { path: `/assignments/${linkId}/${userId}`, method: "DELETE" as const },
         })
     }
 } as const;

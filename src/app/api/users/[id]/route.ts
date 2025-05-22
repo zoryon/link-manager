@@ -16,13 +16,27 @@ export async function GET(request: NextRequest, { params } : { params: Promise<{
         const prisma = generatePrismaClient();
 
         // Find requested user data
-        const user = await prisma.users.findUnique({ where: { id } });
+        const user = await prisma.users.findUnique({
+            where: { 
+                id: Number(id), 
+            },
+            include: {
+                link_assignments: {
+                    include: {
+                        links: true
+                    }
+                }
+            }
+        });
         if (!user) return ResponseHandler.notFound("User was not found");
 
-        // Remove password from the returned data
-        const { password, ...userData } = user;
+        // Remove password and link_assignments from the returned data
+        const { password, link_assignments, ...userData } = user;
 
-        return ResponseHandler.success("User found successfully", userData);
+        // Extract assigned links from link_assignments
+        const assignedLinks = link_assignments.map(assignment => assignment.links);
+
+        return ResponseHandler.success("User found successfully", { ...userData, links: assignedLinks });
     } catch (error) {
         console.error(error);
         return ResponseHandler.handleError(error);

@@ -7,3 +7,4 @@ export type { Route } from "@/types/middleware.types";
 export type { LinkWithTld } from "@/types/link.types";
 export type { FilterParams } from "@/types/filter.types";
 export type { GenericCardProps } from "@/types/card.types";
+export type { DeleteConfirmationModalProps } from "@/types/modal.types";

@@ -3,17 +3,17 @@ import CustomTooltip from "../CustomTooltip";
 import LinkCardDropdownMenu from "./LinkCardDropdownMenu";
 import GenericCard from "../GenericCard";
 import { formatTimeDistance } from "@/lib/utils";
-import { LinkWithTld } from "@/types";
+import { links } from "@/generated/prisma";
 
-const LinkCard = ({ link }: { link: LinkWithTld }) => (
-    <GenericCard
+const LinkCard = ({ link, onRevoke }: { link: links, onRevoke?: (linkId: number) => void }) => (
+    <GenericCard 
         title={
             <CustomTooltip
                 text={link.name}
                 className="text-base xl:text-lg focus:outline-none text-foreground"
             />
         }
-        dropdown={<LinkCardDropdownMenu link={link} />}
+        dropdown={<LinkCardDropdownMenu link={link} onRevoke={onRevoke} />}
         description={
             <>
                 <Globe size={12} className="text-chart-2" />

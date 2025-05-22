@@ -7,11 +7,12 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { links } from "@/generated/prisma";
 import { useHome } from "@/hooks/use-home";
 import { api } from "@/lib/endpoint-builder";
-import { ApiResponse, LinkWithTld } from "@/types";
+import { ApiResponse } from "@/types";
 
-const LinkCardDropdownMenu = ({ link }: { link: LinkWithTld }) => {
+const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (linkId: number) => void }) => {
     const { setLinks } = useHome();
 
     async function deleteLink() {
@@ -75,10 +76,10 @@ const LinkCardDropdownMenu = ({ link }: { link: LinkWithTld }) => {
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => deleteLink()}
+                    onClick={() => onRevoke ? onRevoke(link.id) : deleteLink()}
                     className="!text-destructive hover:!bg-destructive-background cursor-pointer"
                 >
-                    Delete
+                    {onRevoke ? "Revoke" : "Delete"}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

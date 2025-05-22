@@ -35,7 +35,6 @@ export async function GET() {
                     link_assignments: {
                         some: {
                             userId,
-                            revokedAt: null
                         }
                     }
                 }

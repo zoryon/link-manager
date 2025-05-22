@@ -1,3 +1,5 @@
-import { users } from "@/generated/prisma";
+import { links, users } from "@/generated/prisma";
 
-export type PublicUser = Omit<users, "password">;
+export type PublicUser = Omit<users, "password" | "link_assignments"> & {
+  links: links[]; // Array of assigned links
+};

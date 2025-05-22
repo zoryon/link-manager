@@ -12,7 +12,6 @@ model link_assignments {
   userId     Int
   linkId     Int
   assignedAt DateTime? @default(now()) @db.Timestamp(0)
-  revokedAt  DateTime? @db.Timestamp(0)
   users      users     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "link_assignments_ibfk_1")
   links      links     @relation(fields: [linkId], references: [id], onDelete: Cascade, map: "link_assignments_ibfk_2")
 
@@ -38,7 +37,7 @@ model users {
   id               Int                @id @default(autoincrement())
   role             users_role?        @default(USER)
   username         String             @unique(map: "username") @db.VarChar(30)
-  password         String             @db.VarChar(60)
+  password         String             @db.Text
   createdAt        DateTime?          @default(now()) @db.Timestamp(0)
   updatedAt        DateTime?          @default(now()) @db.Timestamp(0)
   link_assignments link_assignments[]

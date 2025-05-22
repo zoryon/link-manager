@@ -41,7 +41,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                     link_assignments: {
                         some: {
                             userId,
-                            revokedAt: null
                         }
                     }
                 }
