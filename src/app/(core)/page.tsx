@@ -6,7 +6,7 @@ import HomeFilterSection from "@/components/home-page/HomeFilterSection";
 import ActiveFiltersSection from "@/components/home-page/ActiveFiltersSection";
 import EmptyState from "@/components/EmptyState";
 import Grid from "@/components/Grid";
-import SkeletonGrid from "@/components/home-page/SkeletonGrid";
+import SkeletonGrid from "@/components/SkeletonGrid";
 import LinkCard from "@/components/home-page/LinkCard";
 
 const HomePage = () => {
