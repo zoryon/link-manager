@@ -1,15 +1,15 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useMemo, Dispatch, SetStateAction } from "react";
-import { links as linksType } from "@/generated/prisma";
+import { links as LinksType } from "@/generated/prisma";
 import { ApiResponse, LinkWithTld } from "@/types";
 import { api } from "@/lib/endpoint-builder";
 import { getTldFromUrl } from "@/lib/utils";
 
 type HomeContextType = {
     isPending: boolean;
-    links: linksType[];
-    setLinks: Dispatch<SetStateAction<linksType[]>>;
+    links: LinksType[];
+    setLinks: Dispatch<SetStateAction<LinksType[]>>;
     nameFilter: string;
     setNameFilter: (value: string) => void;
     dateFilter: string;
@@ -25,7 +25,7 @@ const HomeContext = createContext<HomeContextType | undefined>(undefined);
 
 export function HomeProvider({ children }: { children: React.ReactNode }) {
     const [isPending, setIsPending] = useState(true);
-    const [links, setLinks] = useState<linksType[]>([]);
+    const [links, setLinks] = useState<LinksType[]>([]);
     const [nameFilter, setNameFilter] = useState("");
     const [dateFilter, setDateFilter] = useState("all");
     const [domainFilter, setDomainFilter] = useState("all");
@@ -76,7 +76,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
                 if (res.success) setLinks(res.data);
                 else console.error(res.message);
             } catch (error) {
-                console.error("Fetch error:", error);
+                console.error("Fetch error: ", error);
             }
             setIsPending(false);
         }

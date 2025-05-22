@@ -5,8 +5,9 @@ export const API_CONFIG = {
     users: {
         get: { path: "/users", method: "GET" as const },
         post: { path: "/users", method: "POST" as const },
-        byId: (id: string) => ({
+        byId: (id: number) => ({
             get: { path: `/users/${id}`, method: "GET" as const },
+            delete: { path: `/users/${id}`, method: "DELETE" as const },
         })
     },
     sessions: {

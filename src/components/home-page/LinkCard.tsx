@@ -9,7 +9,7 @@ import { Calendar, Globe } from "lucide-react";
 import { formatTimeDistance } from "@/lib/utils";
 import { LinkWithTld } from "@/types";
 import CustomTooltip from "../CustomTooltip";
-import CardDropdownMenu from "@/components/home-components/CardDropdownMenu";
+import LinkCardDropdownMenu from "@/components/home-page/LinkCardDropdownMenu";
 
 const LinkCard = ({ link }: { link: LinkWithTld }) => {
     return (
@@ -22,7 +22,7 @@ const LinkCard = ({ link }: { link: LinkWithTld }) => {
                             className="text-base xl:text-lg focus:outline-none text-foreground"
                         />
                     </CardTitle>
-                    <CardDropdownMenu link={link} />
+                    <LinkCardDropdownMenu link={link} />
                 </div>
                 <CardDescription className="flex items-center gap-1 text-sm truncate mt-2">
                     <Globe size={12} className="text-chart-2" />

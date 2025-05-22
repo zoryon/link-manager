@@ -28,3 +28,29 @@ export async function GET(request: NextRequest, { params } : { params: Promise<{
         return ResponseHandler.handleError(error);
     }
 }
+
+// Delete one link
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
+    try {
+        // Silence ESLint rules
+        request.nextUrl;
+
+        const { id } = await params;
+
+        await verifyAdminSession();
+
+        const prisma = generatePrismaClient();
+
+        const deletedUser = await prisma.users.delete({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        return ResponseHandler.success(`User with username '${deletedUser.username}' was successfully deleted`, deletedUser);
+    } catch (error) {
+        console.error(error);
+        return ResponseHandler.handleError(error);
+    }
+
+}

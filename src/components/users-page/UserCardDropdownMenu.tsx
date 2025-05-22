@@ -7,31 +7,31 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { useHome } from "@/hooks/use-home";
+import { useUsers } from "@/hooks/use-users";
 import { api } from "@/lib/endpoint-builder";
-import { ApiResponse, LinkWithTld } from "@/types";
+import { ApiResponse, PublicUser } from "@/types";
 
-const CardDropdownMenu = ({ link }: { link: LinkWithTld }) => {
-    const { setLinks } = useHome();
+const UserCardDropdownMenu = ({ user }: { user: PublicUser }) => {
+    const { setUsers } = useUsers();
 
-    async function deleteLink() {
-        // Optimistically remove the link from UI
-        setLinks(prev => prev.filter(l => l.id !== link.id));
+    async function deleteUser() {
+        // Optimistically remove the user from UI
+        setUsers(prev => prev.filter(l => l.id !== user.id));
 
         try {
-            const res: ApiResponse = await fetch(api.links.byId(link.id).delete.path, {
-                method: api.links.byId(link.id).delete.method,
+            const res: ApiResponse = await fetch(api.users.byId(user.id).delete.path, {
+                method: api.users.byId(user.id).delete.method,
             }).then(res => res.json());
 
             if (!res.success) {
                 // Revert deletion if failed
-                setLinks(prev => [...prev, link]);
+                setUsers(prev => [...prev, user]);
                 console.error("Delete failed:", res.message);
             }
         } catch (error) {
             // Revert deletion on error
-            setLinks(prev => [...prev, link]);
-            console.error("Error deleting link:", error);
+            setUsers(prev => [...prev, user]);
+            console.error("Error deleting user:", error);
         }
     }
 
@@ -63,19 +63,13 @@ const CardDropdownMenu = ({ link }: { link: LinkWithTld }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card border-accent/50">
                 <DropdownMenuItem
-                    onClick={() => navigator.clipboard.writeText(link.url)}
-                    className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
-                >
-                    Copy URL
-                </DropdownMenuItem>
-                <DropdownMenuItem
                     className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
                     disabled
                 >
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => deleteLink()}
+                    onClick={() => deleteUser()}
                     className="!text-destructive hover:!bg-destructive-background cursor-pointer"
                 >
                     Delete
@@ -85,4 +79,4 @@ const CardDropdownMenu = ({ link }: { link: LinkWithTld }) => {
     );
 };
 
-export default CardDropdownMenu;
+export default UserCardDropdownMenu;

@@ -21,6 +21,7 @@ import { api } from "@/lib/endpoint-builder";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { users_role } from "@/generated/prisma";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Result = {
     success: boolean,
@@ -100,15 +101,20 @@ const CreateUserForm = () => {
                     name="role"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Ruolo</FormLabel>
+                            <FormLabel>Role</FormLabel>
                             <FormControl>
-                                <select
-                                    {...field}
-                                    className="block w-full rounded border border-input bg-background p-2"
+                                <Select
+                                    value={field.value}
+                                    onValueChange={field.onChange}
                                 >
-                                    <option value={users_role.USER}>User</option>
-                                    <option value={users_role.ADMIN}>Admin</option>
-                                </select>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select role" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value={users_role.USER}>User</SelectItem>
+                                        <SelectItem value={users_role.ADMIN}>Admin</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                             <FormMessage />
                         </FormItem>

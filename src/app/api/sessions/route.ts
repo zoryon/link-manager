@@ -18,8 +18,12 @@ export async function POST(request: NextRequest) {
         if (!username) return ResponseHandler.badRequest("Username is required");
         if (!password) return ResponseHandler.badRequest("Password is required");
 
-        const user = await prisma.users.findUnique({ where: { username } });
-        if (!user) return ResponseHandler.badRequest("User was not found");
+        const user = await prisma.users.findFirst({
+            where: {
+                username: { equals: username }
+            }
+        });
+        if (!user || user.username !== username) return ResponseHandler.badRequest("User was not found");
 
         const isMatching = await bcrypt.compare(password, user.password);
         if (!isMatching) return ResponseHandler.unauthorized("Invalid password");

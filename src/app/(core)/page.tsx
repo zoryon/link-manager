@@ -1,12 +1,12 @@
 "use client";
 
 import { useHome } from "@/hooks/use-home";
-import HomeHeader from "@/components/home-components/HomeHeader";
-import HomeFilterSection from "@/components/home-components/HomeFilterSection";
-import ActiveFiltersSection from "@/components/home-components/ActiveFiltersSection";
-import EmptyState from "@/components/home-components/EmptyState";
-import LinksGrid from "@/components/home-components/LinksGrid";
-import SkeletonGrid from "@/components/home-components/SkeletonGrid";
+import HomeHeader from "@/components/home-page/HomeHeader";
+import HomeFilterSection from "@/components/home-page/HomeFilterSection";
+import ActiveFiltersSection from "@/components/home-page/ActiveFiltersSection";
+import EmptyState from "@/components/EmptyState";
+import LinksGrid from "@/components/home-page/LinksGrid";
+import SkeletonGrid from "@/components/home-page/SkeletonGrid";
 
 const HomePage = () => {
   const {
@@ -34,7 +34,7 @@ const HomePage = () => {
         {isPending ? (
           <SkeletonGrid />
         ) : filteredLinks.length === 0 ? (
-          <EmptyState />
+          <EmptyState use="home" />
         ) : (
           <LinksGrid />
         )}

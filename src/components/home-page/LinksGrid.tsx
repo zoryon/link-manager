@@ -1,7 +1,7 @@
 "use client";
 
 import { useHome } from "@/hooks/use-home";
-import LinkCard from "@/components/home-components/LinkCard";
+import LinkCard from "@/components/home-page/LinkCard";
 
 const LinksGrid = () => {
     const { filteredLinks } = useHome();
