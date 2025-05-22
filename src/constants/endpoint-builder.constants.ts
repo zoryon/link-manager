@@ -16,8 +16,10 @@ export const API_CONFIG = {
     links : {
         get: { path: "/links", method: "GET" as const },
         post: { path: "/links", method: "POST" as const },
-        byId: (id: string) => ({
+        delete: { path: "links", method: "DELETE" as const },
+        byId: (id: number) => ({
             get: { path: `/links/${id}`, method: "GET" as const },
+            delete: { path: `/links/${id}`, method: "DELETE" as const },
         })
     }
 } as const;

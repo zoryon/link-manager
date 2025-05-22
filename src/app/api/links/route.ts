@@ -29,7 +29,7 @@ export async function GET() {
             // Admin can access any link
             links = await prisma.links.findMany();
         } else {
-            // Regular user must be assigned the link to fetch and see it
+            // Regular user must be assigned the link to fetch and see the link
             links = await prisma.links.findMany({
                 where: {
                     link_assignments: {
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
                     linkId: link.id,
                     userId
                 })),
-                skipDuplicates: true // Opzionale: evita duplicati
+                skipDuplicates: true 
             });
 
             if (assignments.count === 0) 
@@ -115,4 +115,9 @@ export async function POST(request: NextRequest) {
         console.error(error);
         return ResponseHandler.handleError(error);
     }
+}
+
+// Delete one or more links at the same time
+export async function DELETE() {
+
 }
