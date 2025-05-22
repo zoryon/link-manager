@@ -3,9 +3,10 @@
 import UsersHeader from "@/components/users-page/UsersHeader";
 import UsersFilterSection from "@/components/users-page/UsersFilterSection";
 import EmptyState from "@/components/EmptyState";
-import UsersGrid from "@/components/users-page/UsersGrid";
 import SkeletonGrid from "@/components/SkeletonGrid";
 import { useUsers } from "@/hooks/use-users";
+import Grid from "@/components/Grid";
+import UserCard from "@/components/users-page/UserCard";
 
 const UsersPage = () => {
     const {
@@ -33,7 +34,14 @@ const UsersPage = () => {
                 ) : filteredUsers.length === 0 ? (
                     <EmptyState use="users" />
                 ) : (
-                    <UsersGrid />
+                    <Grid
+                        data={filteredUsers}
+                        component={({ data }) => <UserCard user={data} />}
+                        emptyMessage="No link found"
+                        gridClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+                        gapClass="gap-2 xl:gap-3"
+                        keyProp="id"
+                    />
                 )}
             </main>
         </div>

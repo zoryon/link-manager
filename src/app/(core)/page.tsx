@@ -5,8 +5,9 @@ import HomeHeader from "@/components/home-page/HomeHeader";
 import HomeFilterSection from "@/components/home-page/HomeFilterSection";
 import ActiveFiltersSection from "@/components/home-page/ActiveFiltersSection";
 import EmptyState from "@/components/EmptyState";
-import LinksGrid from "@/components/home-page/LinksGrid";
+import Grid from "@/components/Grid";
 import SkeletonGrid from "@/components/home-page/SkeletonGrid";
+import LinkCard from "@/components/home-page/LinkCard";
 
 const HomePage = () => {
   const {
@@ -36,7 +37,14 @@ const HomePage = () => {
         ) : filteredLinks.length === 0 ? (
           <EmptyState use="home" />
         ) : (
-          <LinksGrid />
+          <Grid
+            data={filteredLinks}
+            component={({ data }) => <LinkCard link={data} />}
+            emptyMessage="No link found"
+            gridClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+            gapClass="gap-2 xl:gap-3"
+            keyProp="id"
+          />
         )}
       </main>
     </div>
