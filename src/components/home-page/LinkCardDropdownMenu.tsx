@@ -79,7 +79,7 @@ const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (lin
                             onClick={() => router.push(`links/${link.id}/assign`)}
                             className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
                         >
-                            Edit
+                            Assignments
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => onRevoke ? onRevoke(link.id) : deleteLink()}

@@ -22,12 +22,12 @@ export function UsersProvider({ children }: { children: React.ReactNode }) {
     const [nameFilter, setNameFilter] = useState("");
 
     // Memoize derived data
-    const filteredUsers = useMemo(() =>
-        users.filter(user => {
-            const matchesName = user.username?.toLowerCase().includes(nameFilter.toLowerCase());
-
-            return matchesName;
-        }), [users, nameFilter]);
+    const filteredUsers = useMemo(() => 
+        users
+            .filter((user): user is PublicUser => !!user && typeof user.username === 'string')
+            .filter(user => user.username.toLowerCase().includes(nameFilter.toLowerCase())),
+        [users, nameFilter]
+    );
 
     // Fetch users
     useEffect(() => {

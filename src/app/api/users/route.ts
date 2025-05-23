@@ -34,15 +34,15 @@ export async function POST(request: NextRequest) {
         const hashedPassword = await bcrypt.hash(password, 10);;
 
         // Register the new user
-        const { id: newId } = await prisma.users.create({
+        const createdUser = await prisma.users.create({
             data: {
                 username,
                 password: hashedPassword,
             }
         });
-        if (!newId) return ResponseHandler.internalError(new Error("Internal server error"));
+        if (!createdUser) return ResponseHandler.internalError(new Error("Internal server error"));
 
-        return ResponseHandler.created("User created successfully", newId);
+        return ResponseHandler.created("User created successfully", createdUser);
     } catch (error) {
         console.error(error);
         return ResponseHandler.handleError(error);

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { z } from "zod";
 import { createUserSchema } from "@/schemas";
@@ -16,12 +16,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import PasswordInput from "@/components/inputs/password-input/PasswordInput";
-import { ApiResponse } from "@/types";
+import { ApiResponse, PublicUser } from "@/types";
 import { api } from "@/lib/endpoint-builder";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { users_role } from "@/generated/prisma";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useUsers } from "@/hooks/use-users";
 
 type Result = {
     success: boolean,
@@ -29,9 +30,11 @@ type Result = {
 } | null;
 
 const CreateUserForm = () => {
+    const router = useRouter();
+    const { setUsers, setNameFilter } = useUsers();
+
     const [isPending, setIsPending] = useState<boolean>(false);
     const [result, setResult] = useState<Result>(null);
-    const router = useRouter();
 
     const form = useForm<z.infer<typeof createUserSchema>>({
         resolver: zodResolver(createUserSchema),
@@ -45,23 +48,47 @@ const CreateUserForm = () => {
 
     async function onSubmit(values: z.infer<typeof createUserSchema>) {
         setIsPending(true);
-        const res: ApiResponse = await fetch(api.users.post.path, {
+
+        const tempUser: PublicUser = {
+            id: Date.now() * -1, // fake numeric ID for temporary use
+            username: values.username,
+            role: values.role,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            links: []
+        };
+        
+        // Optimistically update UI with the new user
+        setUsers(prev => [...prev, tempUser]);
+        
+        router.push("/users");
+        
+        const res: ApiResponse<PublicUser> = await fetch(api.users.post.path, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(values),
         }).then(res => res.json());
+
+        setIsPending(false);
+
+        if (res.success) {
+            // Replace temp user with actual user from the server (match by username or ID)
+            setUsers(prev =>
+                prev.map(user =>
+                    user.id === tempUser.id ? res.data : user
+                )
+            );
+        } else {
+            // Roll back optimistic update if it fails
+            setUsers(prev => prev.filter(user => user.id !== tempUser.id));
+        }
         
         setResult({
             success: res.success,
             message: res.message
         });
-        setIsPending(false);
-
-        if (res.success) {
-            router.push("/users");
-        }
     }
 
     return (
@@ -83,15 +110,15 @@ const CreateUserForm = () => {
                 />
 
                 {/* Password */}
-                <PasswordInput 
-                    control={form.control} 
-                    fieldLabel="Password" 
+                <PasswordInput
+                    control={form.control}
+                    fieldLabel="Password"
                 />
 
                 {/* Password confirmation */}
-                <PasswordInput 
-                    control={form.control} 
-                    fieldLabel="Password" 
+                <PasswordInput
+                    control={form.control}
+                    fieldLabel="Password"
                     isConfirmation
                 />
 
