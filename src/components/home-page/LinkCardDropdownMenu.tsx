@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { links } from "@/generated/prisma";
+import { useAuth } from "@/hooks/use-auth";
 import { useLinks } from "@/hooks/use-links";
 import { api } from "@/lib/endpoint-builder";
 import { ApiResponse } from "@/types";
@@ -15,6 +16,7 @@ import { useRouter } from "next/navigation";
 
 const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (linkId: number) => void }) => {
     const { setLinks } = useLinks();
+    const { isAdmin } = useAuth();
     const router = useRouter();
 
     async function deleteLink() {
@@ -71,18 +73,22 @@ const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (lin
                 >
                     Copy URL
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={() => router.push(`links/${link.id}/assign`)}
-                    className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
-                >
-                    Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={() => onRevoke ? onRevoke(link.id) : deleteLink()}
-                    className="!text-destructive hover:!bg-destructive-background cursor-pointer"
-                >
-                    {onRevoke ? "Revoke" : "Delete"}
-                </DropdownMenuItem>
+                {isAdmin() && (
+                    <>
+                        <DropdownMenuItem
+                            onClick={() => router.push(`links/${link.id}/assign`)}
+                            className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
+                        >
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => onRevoke ? onRevoke(link.id) : deleteLink()}
+                            className="!text-destructive hover:!bg-destructive-background cursor-pointer"
+                        >
+                            {onRevoke ? "Revoke" : "Delete"}
+                        </DropdownMenuItem>
+                    </>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );
