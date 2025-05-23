@@ -103,10 +103,7 @@ export async function POST(request: NextRequest) {
             if (assignments.count === 0) 
                 throw new Error("Failed to create any assignments");
 
-            return {
-                linkId: link.id,
-                assignedUsers: assignments.count
-            };
+            return link;
         });
 
         return ResponseHandler.success("Link created successfully", result);

@@ -8,13 +8,6 @@ import { api } from "@/lib/endpoint-builder";
 import UserDetailsCard from "@/components/users-page/UserDetailsCard";
 import AssignedLinksList from "@/components/users-page/AssignedLinksList";
 
-const LoadingSkeleton = () => (
-    <div className="w-screen pt-10 flex flex-col items-center justify-center space-y-6">
-        <Skeleton className="h-[200px] w-7xl" />
-        <Skeleton className="h-[300px] w-7xl" />
-    </div>
-);
-
 const EditUserPage = () => {
     const params = useParams();
     const [user, setUser] = useState<PublicUser | null>(null);
@@ -95,5 +88,12 @@ const EditUserPage = () => {
         </div>
     );
 };
+
+const LoadingSkeleton = () => (
+    <div className="w-screen pt-10 flex flex-col items-center justify-center space-y-6">
+        <Skeleton className="h-[200px] w-7xl" />
+        <Skeleton className="h-[300px] w-7xl" />
+    </div>
+);
 
 export default EditUserPage;

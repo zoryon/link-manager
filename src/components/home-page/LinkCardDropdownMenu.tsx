@@ -8,12 +8,14 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { links } from "@/generated/prisma";
-import { useHome } from "@/hooks/use-home";
+import { useLinks } from "@/hooks/use-links";
 import { api } from "@/lib/endpoint-builder";
 import { ApiResponse } from "@/types";
+import { useRouter } from "next/navigation";
 
 const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (linkId: number) => void }) => {
-    const { setLinks } = useHome();
+    const { setLinks } = useLinks();
+    const router = useRouter();
 
     async function deleteLink() {
         // Optimistically remove the link from UI
@@ -70,8 +72,8 @@ const LinkCardDropdownMenu = ({ link, onRevoke }: { link: links, onRevoke?: (lin
                     Copy URL
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                    onClick={() => router.push(`links/${link.id}/assign`)}
                     className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
-                    disabled
                 >
                     Edit
                 </DropdownMenuItem>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useHome } from "@/hooks/use-home";
+import { useLinks } from "@/hooks/use-links";
 import HomeHeader from "@/components/home-page/HomeHeader";
 import HomeFilterSection from "@/components/home-page/HomeFilterSection";
 import ActiveFiltersSection from "@/components/home-page/ActiveFiltersSection";
@@ -14,7 +14,7 @@ const HomePage = () => {
     isPending,
     filteredLinks,
     links,
-  } = useHome();
+  } = useLinks();
 
   return (
     <div className="min-h-[88vh]">

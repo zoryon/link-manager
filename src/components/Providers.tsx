@@ -1,14 +1,14 @@
 "use client";
 
 import { AuthProvider } from "@/hooks/use-auth";
-import { HomeProvider } from "@/hooks/use-home";
+import { LinksProvider } from "@/hooks/use-links";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <AuthProvider>
-            <HomeProvider>
+            <LinksProvider>
                 {children}
-            </HomeProvider>
+            </LinksProvider>
         </AuthProvider>
     );
 }

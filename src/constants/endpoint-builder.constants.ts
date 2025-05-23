@@ -24,6 +24,7 @@ export const API_CONFIG = {
         })
     },
     assignments: {
+        post: { path: "/assignments", method: "POST" as const },
         byIds: ({ linkId, userId }: { linkId: number, userId: number }) => ({
             delete: { path: `/assignments/${linkId}/${userId}`, method: "DELETE" as const },
         })

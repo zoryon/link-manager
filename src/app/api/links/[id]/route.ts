@@ -1,4 +1,4 @@
-import { users_role } from "@/generated/prisma";
+import { links, users_role } from "@/generated/prisma";
 import { verifyAdminSession } from "@/lib/auth-helpers";
 import { generatePrismaClient } from "@/lib/db";
 import { ResponseHandler } from "@/lib/ResponseHandler";
@@ -11,7 +11,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         // Silence ESLint rules
         request.nextUrl;
 
-        const { id } = await params;
+        const { id: strId } = await params;
+        const id: number = Number(strId);
 
         const session = await verifySession();
         const userId: number = session?.userId as number;
@@ -31,7 +32,38 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         if (currentUser.role === users_role.ADMIN) {
             // Admin can access any link
             link = await prisma.links.findUnique({
-                where: { id }
+                where: { 
+                    id,
+                },
+                include: {
+                    link_assignments: {
+                        include: {
+                            users: {
+                                select: {
+                                    id: true,
+                                    username: true,
+                                    role: true,
+                                    createdAt: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            if (!link) return ResponseHandler.notFound("Link not found");
+
+            const assignedUsers = link.link_assignments.map(a => a.users);
+
+            return ResponseHandler.success("Link found successfully", {
+                id: link.id,
+                name: link.name,
+                url: link.url,
+                description: link.description,
+                createdAt: link.createdAt,
+                updatedAt: link.updatedAt,
+                creatorId: link.creatorId,
+                assignedUsers,
             });
         } else {
             // Regular user must be assigned the link to fetch and see it
@@ -45,10 +77,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                     }
                 }
             });
-        }
-        if (!link) return ResponseHandler.notFound("Link not found");
 
-        return ResponseHandler.success("Link found successfully", link);
+            if (!link) return ResponseHandler.notFound("Link not found");
+
+            return ResponseHandler.success("Link found successfully", link as links);
+        }
     } catch (error) {
         console.error(error);
         return ResponseHandler.handleError(error);

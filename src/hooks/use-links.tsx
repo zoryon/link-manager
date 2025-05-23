@@ -6,7 +6,7 @@ import { ApiResponse, LinkWithTld } from "@/types";
 import { api } from "@/lib/endpoint-builder";
 import { getTldFromUrl } from "@/lib/utils";
 
-type HomeContextType = {
+type LinksContextType = {
     isPending: boolean;
     links: LinksType[];
     setLinks: Dispatch<SetStateAction<LinksType[]>>;
@@ -21,9 +21,9 @@ type HomeContextType = {
     clearAllFilters: () => void;
 };
 
-const HomeContext = createContext<HomeContextType | undefined>(undefined);
+const LinksContext = createContext<LinksContextType | undefined>(undefined);
 
-export function HomeProvider({ children }: { children: React.ReactNode }) {
+export function LinksProvider({ children }: { children: React.ReactNode }) {
     const [isPending, setIsPending] = useState(true);
     const [links, setLinks] = useState<LinksType[]>([]);
     const [nameFilter, setNameFilter] = useState("");
@@ -104,13 +104,13 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
         clearAllFilters
     };
 
-    return <HomeContext.Provider value={value}>{children}</HomeContext.Provider>;
+    return <LinksContext.Provider value={value}>{children}</LinksContext.Provider>;
 }
 
-export function useHome() {
-    const context = useContext(HomeContext);
+export function useLinks() {
+    const context = useContext(LinksContext);
     if (context === undefined) {
-        throw new Error("useHome must be used within a HomeProvider");
+        throw new Error("useLinks must be used within a LinkProvider");
     }
     return context;
 }

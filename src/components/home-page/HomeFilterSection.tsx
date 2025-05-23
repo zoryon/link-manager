@@ -10,7 +10,7 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useHome } from "@/hooks/use-home";
+import { useLinks } from "@/hooks/use-links";
 
 const HomeFilterSection = () => {
     const {
@@ -22,7 +22,7 @@ const HomeFilterSection = () => {
         setDomainFilter,
         linksWithTld,
         clearAllFilters
-    } = useHome();
+    } = useLinks();
 
     // Function to get a color for TLD badges based on TLD
     const getTldColor = (tld: string) => {

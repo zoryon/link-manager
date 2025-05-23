@@ -1,6 +1,6 @@
 "use client";
 
-import { useHome } from "@/hooks/use-home";
+import { useLinks } from "@/hooks/use-links";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 
@@ -13,7 +13,7 @@ const ActiveFiltersSection = () => {
         setDateFilter,
         domainFilter,
         setDomainFilter
-    } = useHome();
+    } = useLinks();
 
     return (
         nameFilter || dateFilter !== "all" || domainFilter !== "all") && (

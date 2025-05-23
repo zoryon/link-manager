@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useLinks } from "@/hooks/use-links";
 
 const CreateLinkForm = () => {
     const [isPending, setIsPending] = useState<boolean>(false);
@@ -43,6 +44,7 @@ const CreateLinkForm = () => {
     const [result, setResult] = useState<string | null>(null);
 
     const router = useRouter();
+    const { setLinks } = useLinks();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -70,23 +72,56 @@ const CreateLinkForm = () => {
     });
 
     async function onSubmit(data: z.infer<typeof linkSchema>) {
-        setResult("");
-        setIsPending(true);
+    setResult("");
+    setIsPending(true);
 
+    // Create a temporary ID (negative or UUID)
+    const tempId = Date.now() * -1;
+    const creatorId = Date.now() * -2;
+
+    // Build a provisional link object with the data filled and temp ID
+    const optimisticLink = {
+        id: tempId,
+        name: data.name,
+        url: data.url,
+        description: data.description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        creatorId: creatorId
+    };
+
+    // Optimistically update the links state immediately
+    setLinks(prev => [...prev, optimisticLink]);
+
+    try {
         const res: ApiResponse = await fetch(api.links.post.path, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
-        }).then(res => res.json())
+        }).then(res => res.json());
 
         if (res.success) {
+            // Replace the optimistic link with the real one from response (if returned)
+            setLinks(prev => prev.map(link => 
+                link.id === tempId ? res.data : link
+            ));
             router.push("/");
         } else {
-            console.error(res.message);
+            // On failure, remove the optimistic link and show error
+            setLinks(prev => prev.filter(link => link.id !== tempId));
             setResult(res.message);
+            console.error(res.message);
         }
+    } catch (error) {
+        // On error, remove optimistic link and show generic error
+        setLinks(prev => prev.filter(link => link.id !== tempId));
+        setResult("Unexpected error occurred");
+        console.error(error);
+    } finally {
         setIsPending(false);
-    };
+    }
+}
+
 
     return (
         <Form {...form}>
