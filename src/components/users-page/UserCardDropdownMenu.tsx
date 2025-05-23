@@ -76,7 +76,7 @@ const UserCardDropdownMenu = ({ user }: { user: PublicUser }) => {
                             onClick={() => router.push(`/users/${user.id}/edit`)}
                             className="hover:!bg-accent hover:text-chart-2 cursor-pointer"
                         >
-                            Edit
+                            Assignments
                         </DropdownMenuItem>
                         {user.id !== currentUser?.id && (
                             <DropdownMenuItem
